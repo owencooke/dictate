@@ -15,6 +15,14 @@ export const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ lines, int
   const textContainerRef = React.useRef<HTMLDivElement>(null);
   const bottomRef = React.useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = React.useState(false);
+  // text size widget state (px) — default larger for tablet/iPad readability
+  const [fontSize, setFontSize] = React.useState<number>(18);
+  const MIN_FONT = 12;
+  const MAX_FONT = 28;
+  const STEP = 2;
+
+  const increaseFont = () => setFontSize(s => Math.min(MAX_FONT, s + STEP));
+  const decreaseFont = () => setFontSize(s => Math.max(MIN_FONT, s - STEP));
 
   // auto-scroll when new lines or interim arrive
   React.useEffect(() => {
@@ -41,7 +49,11 @@ export const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ lines, int
   }, []);
 
   return (
-    <div className="text-container" ref={textContainerRef}>
+    <div className="text-container" ref={textContainerRef} style={{ fontSize: `${fontSize}px` }}>
+      <div className="text-size-controls" aria-hidden={false}>
+        <button className="sz-btn" onClick={decreaseFont} aria-label="Decrease text size">−</button>
+        <button className="sz-btn" onClick={increaseFont} aria-label="Increase text size">+</button>
+      </div>
       {lines && lines.length > 0 ? (
         lines.map((line, i) => (
           <p key={i} className="transcript-line">

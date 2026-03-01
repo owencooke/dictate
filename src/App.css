@@ -157,18 +157,46 @@ body,
 
 /* make svg icons fill the circular button better */
 .btn svg {
-  width: 55%;
-  height: 55%;
+  display: block;
+  width: 65%;
+  height: 65%;
+}
+
+.stop-button.listening {
+  animation: pulse 1.2s infinite;
 }
 
 /* timestamp styling */
 .timestamp {
-  font-size: 0.75rem;
+  font-size: 0.75em;
   color: #aaa;
   margin-right: 8px;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
 }
+
+/* text size controls inside the text container */
+.text-size-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 6;
+}
+.text-size-controls .sz-btn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 6px;
+  border: none;
+  background: rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+.text-size-controls .sz-btn:active { transform: translateY(1px); }
 
 .scroll-to-bottom-btn {
   position: absolute;
