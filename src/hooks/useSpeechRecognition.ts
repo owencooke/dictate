@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface SpeechRecognitionResult {
   transcript: string;
+  interimTranscript: string;
+  finalTranscript: string;
   isListening: boolean;
   isSupported: boolean;
   start: () => void;
@@ -20,13 +22,15 @@ export const useSpeechRecognition = ({
   continuous = true,
   interimResults = true,
 }: UseSpeechRecognitionOptions = {}): SpeechRecognitionResult => {
-  const [transcript, setTranscript] = useState('');
+  // split state: finalized and interim pieces
+  const [finalTranscript, setFinalTranscript] = useState('');
+  const [interimTranscript, setInterimTranscript] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
-    const SpeechRecognition = window.webkitSpeechRecognition ?? window.SpeechRecognition;
+    const SpeechRecognition = (window as any).webkitSpeechRecognition ?? (window as any).SpeechRecognition;
 
     if (!SpeechRecognition) {
       setIsSupported(false);
@@ -41,23 +45,24 @@ export const useSpeechRecognition = ({
     recognition.lang = lang;
 
     recognition.onresult = (event: any) => {
-      let interim = '';
-      let final = '';
+      let interimText = '';
+      let finalText = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const text = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-          final += text;
+          finalText += text;
         } else {
-          interim += text;
+          interimText += text;
         }
       }
 
-      setTranscript(prev => {
-        // Append finalized text, show interim appended to current final
-        const base = prev + final;
-        return interim ? base + interim : base;
-      });
+      if (finalText) {
+        // append a newline after each finalized segment to keep sentences separate
+        setFinalTranscript(prev => prev + finalText + '\n');
+      }
+      // always replace interim, never accumulate
+      setInterimTranscript(interimText);
     };
 
     recognition.onend = () => {
@@ -82,12 +87,26 @@ export const useSpeechRecognition = ({
   const stop = useCallback(() => {
     recognitionRef.current?.stop();
     setIsListening(false);
+    // clear any lingering interim results when recognition stops
+    setInterimTranscript('');
   }, []);
 
   const reset = useCallback(() => {
     stop();
-    setTranscript('');
+    setFinalTranscript('');
+    setInterimTranscript('');
   }, [stop]);
 
-  return { transcript, isListening, isSupported, start, stop, reset };
+  // expose combined transcript for convenience
+  const transcript = finalTranscript + interimTranscript;
+  return {
+    transcript,
+    finalTranscript,
+    interimTranscript,
+    isListening,
+    isSupported,
+    start,
+    stop,
+    reset,
+  };
 };

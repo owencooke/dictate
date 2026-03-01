@@ -5,7 +5,16 @@ import { TranscriptDisplay } from './components/TranscriptDisplay';
 import { useSpeechRecognition } from './hooks/useSpeechRecognition';
 
 const App: React.FC = () => {
-  const { transcript, isListening, isSupported, start, stop, reset } = useSpeechRecognition();
+  const {
+    transcript,
+    interimTranscript,
+    // finalTranscript could be used elsewhere if needed
+    isListening,
+    isSupported,
+    start,
+    stop,
+    reset,
+  } = useSpeechRecognition();
 
   if (!isSupported) {
     return <div className="container">Speech recognition is not supported in this browser. Please use Safari.</div>;
@@ -15,7 +24,7 @@ const App: React.FC = () => {
     <div className="container">
       <h1 className="title">Dictate</h1>
       <div className="card">
-      <TranscriptDisplay transcript={transcript} />
+      <TranscriptDisplay transcript={transcript} interimTranscript={interimTranscript} />
       <RecorderControls
         isListening={isListening}
         hasTranscript={!!transcript}
