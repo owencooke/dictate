@@ -181,12 +181,11 @@ body,
   top: 10px;
   right: 10px;
   display: flex;
-  gap: 0.25rem;
   z-index: 6;
 }
 .text-size-controls .sz-panel {
   display: flex;
-  gap: 0.35rem;
+  gap: 0.5rem;
   align-items: center;
   padding: 6px 8px;
   background: #f3f3f3; /* subtle panel grey */
@@ -194,14 +193,12 @@ body,
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 .text-size-controls .sz-icon {
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 2rem;
+  height: 2rem;
   color: #222;
   margin: 0 2px;
 }
 .text-size-controls .sz-btn {
-  width: 2rem;
-  height: 2rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -224,11 +221,11 @@ body,
   bottom: 12px;
   right: 12px;
   background: #e6e6e6;
-  color: #595959;
+  opacity: 75%;
+  color: #000000;
   border: none;
   border-radius: 50%;
-  width: 2.25rem;
-  height: 2.25rem;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,7 +233,3 @@ body,
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   transition: background-color 0.15s ease, transform 0.08s ease;
 }
-.scroll-to-bottom-btn.secondary { background: #f0f0f0; color: #6b6b6b; }
-.scroll-to-bottom-btn:hover { background: #e0e0e0; transform: translateY(-1px); }
-
-.scroll-to-bottom-btn svg { color: inherit; fill: currentColor; }
