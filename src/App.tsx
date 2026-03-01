@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import { useSpeechRecognition } from './hooks/useSpeechRecognition';
-import { TranscriptDisplay } from './components/TranscriptDisplay';
 import { RecorderControls } from './components/RecorderControls';
+import { TranscriptDisplay } from './components/TranscriptDisplay';
+import { useSpeechRecognition } from './hooks/useSpeechRecognition';
 
 const App: React.FC = () => {
   const { transcript, isListening, isSupported, start, stop, reset } = useSpeechRecognition();
@@ -13,6 +13,8 @@ const App: React.FC = () => {
 
   return (
     <div className="container">
+      <h1 className="title">Dictate</h1>
+      <div className="card">
       <TranscriptDisplay transcript={transcript} />
       <RecorderControls
         isListening={isListening}
@@ -21,6 +23,7 @@ const App: React.FC = () => {
         onStop={stop}
         onReset={reset}
       />
+      </div>
     </div>
   );
 };
