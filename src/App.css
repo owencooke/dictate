@@ -38,6 +38,31 @@ body,
   gap: 1.5rem;
 }
 
+.controls-container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.controls-spacer {
+  /* Empty left column to balance the layout */
+}
+
+.recorder-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  grid-column: 2;
+}
+
+.font-size-controls {
+  justify-self: end;
+  grid-column: 3;
+}
+
 .text-container {
   flex: 1;
   min-height: 0; /* allow shrinking inside flex parent */
@@ -70,13 +95,6 @@ body,
   line-height: 1.7;
   display: flex;
   align-items: baseline;
-}
-
-.recorder-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
 }
 
 .button-container {
@@ -159,6 +177,53 @@ body,
   margin-right: 8px;
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
+}
+
+/* font size controls on the right side */
+.font-size-panel {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  background: #f3f3f3; /* subtle panel grey */
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.font-size-icon {
+  color: #222;
+  margin: 0 2px;
+}
+
+.font-size-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  padding: 0.5rem;
+  border: none;
+  background: #e6e6e6; /* slightly darker than panel */
+  color: #111;
+  cursor: pointer;
+  outline: none;
+}
+
+.font-size-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.font-size-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.font-size-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.font-size-btn:focus-visible {
+  box-shadow: 0 0 0 4px rgba(34,34,34,0.08);
+  border-radius: 6px;
 }
 
 /* text size controls inside the text container */
