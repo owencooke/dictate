@@ -50,7 +50,7 @@ export const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ lines, int
   }, []);
 
   return (
-    <div className="text-container" ref={textContainerRef}>
+    <>
       <div className="text-size-controls" aria-hidden={false} role="group" aria-label="Text size controls">
         <div className="sz-panel" aria-hidden>
           <button className="sz-btn" onClick={decreaseFont} aria-label="Decrease text size">
@@ -62,35 +62,37 @@ export const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ lines, int
           </button>
         </div>
       </div>
-      <div style={{ fontSize: `${fontSize}px` }}>
-        {lines && lines.length > 0 ? (
-          lines.map((line, i) => (
-            <p key={i} className="transcript-line">
-              <span className="timestamp">{line.timestamp}</span>
-              <span className="line-text">{line.text}</span>
-            </p>
-          ))
-        ) : (
-          <span className="placeholder">Tap the mic to start speaking...</span>
+      <div className="text-container" ref={textContainerRef}>
+        <div style={{ fontSize: `${fontSize}px` }}>
+          {lines && lines.length > 0 ? (
+            lines.map((line, i) => (
+              <p key={i} className="transcript-line">
+                <span className="timestamp">{line.timestamp}</span>
+                <span className="line-text">{line.text}</span>
+              </p>
+            ))
+          ) : (
+            <span className="placeholder">Tap the mic to start speaking...</span>
+          )}
+
+          {interimTranscript && interimTranscript.length > 0 && (
+            <p className="interim-line">{interimTranscript}</p>
+          )}
+        </div>
+
+        {showScrollButton && (
+          <button
+            className="scroll-to-bottom-btn secondary"
+            onClick={() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' })}
+            aria-label="Scroll to bottom"
+          >
+            <FiArrowDown />
+          </button>
         )}
 
-        {interimTranscript && interimTranscript.length > 0 && (
-          <p className="interim-line">{interimTranscript}</p>
-        )}
+        {/* sentinel to scroll into view */}
+        <div ref={bottomRef} />
       </div>
-
-      {showScrollButton && (
-        <button
-          className="scroll-to-bottom-btn secondary"
-          onClick={() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' })}
-          aria-label="Scroll to bottom"
-        >
-          <FiArrowDown />
-        </button>
-      )}
-
-      {/* sentinel to scroll into view */}
-      <div ref={bottomRef} />
-    </div>
+    </>
   );
 };
