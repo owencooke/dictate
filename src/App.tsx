@@ -8,7 +8,7 @@ const App: React.FC = () => {
   const {
     transcript,
     interimTranscript,
-    // finalTranscript could be used elsewhere if needed
+    finalTranscript,
     isListening,
     isSupported,
     start,
@@ -24,7 +24,7 @@ const App: React.FC = () => {
     <div className="container">
       <h1 className="title">Dictate</h1>
       <div className="card">
-      <TranscriptDisplay transcript={transcript} interimTranscript={interimTranscript} />
+      <TranscriptDisplay transcript={finalTranscript} interimTranscript={interimTranscript} />
       <RecorderControls
         isListening={isListening}
         hasTranscript={!!transcript}
