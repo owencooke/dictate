@@ -1,43 +1,72 @@
 import React from "react";
+import { FiArrowDown } from 'react-icons/fi';
+
+interface Line {
+  text: string;
+  timestamp: string;
+}
 
 interface TranscriptDisplayProps {
-  /** concatenated final+interim for legacy purposes */
-  transcript: string;
-  /** the most recent interim segment, not persisted */
+  lines: Line[];
   interimTranscript?: string;
 }
 
-export const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ transcript, interimTranscript }) => {
-  // split finalized text into lines, drop empty ones
-  const finalLines = transcript
-    .split('\n')
-    .map(l => l.trim())
-    .filter(l => l.length > 0);
-
+export const TranscriptDisplay: React.FC<TranscriptDisplayProps> = ({ lines, interimTranscript }) => {
   const textContainerRef = React.useRef<HTMLDivElement>(null);
   const bottomRef = React.useRef<HTMLDivElement>(null);
+  const [showScrollButton, setShowScrollButton] = React.useState(false);
 
-  // auto-scroll when either transcript or interimTranscript change
+  // auto-scroll when new lines or interim arrive
   React.useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [transcript, interimTranscript]);
+  }, [lines, interimTranscript]);
+
+  // scroll detection to show/hide the scroll-to-bottom button
+  React.useEffect(() => {
+    const el = textContainerRef.current;
+    if (!el) return;
+
+    const onScroll = () => {
+      const nearBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 20;
+      setShowScrollButton(!nearBottom);
+    };
+
+    el.addEventListener('scroll', onScroll, { passive: true });
+    // run once to set initial state
+    onScroll();
+
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <div className="text-container" ref={textContainerRef}>
-      {finalLines.length > 0 ? (
-        finalLines.map((line, i) => (
+      {lines && lines.length > 0 ? (
+        lines.map((line, i) => (
           <p key={i} className="transcript-line">
-            {line}
+            <span className="timestamp">{line.timestamp}</span>
+            <span className="line-text">{line.text}</span>
           </p>
         ))
       ) : (
         <span className="placeholder">Tap the mic to start speaking...</span>
       )}
+
       {interimTranscript && interimTranscript.length > 0 && (
         <p className="interim-line">{interimTranscript}</p>
       )}
+
+      {showScrollButton && (
+        <button
+          className="scroll-to-bottom-btn"
+          onClick={() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' })}
+          aria-label="Scroll to bottom"
+        >
+          <FiArrowDown />
+        </button>
+      )}
+
       {/* sentinel to scroll into view */}
       <div ref={bottomRef} />
     </div>

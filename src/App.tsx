@@ -22,16 +22,15 @@ const App: React.FC = () => {
 
   return (
     <div className="container">
-      <h1 className="title">Dictate</h1>
       <div className="card">
-      <TranscriptDisplay transcript={finalTranscript} interimTranscript={interimTranscript} />
-      <RecorderControls
-        isListening={isListening}
-        hasTranscript={!!transcript}
-        onStart={start}
-        onStop={stop}
-        onReset={reset}
-      />
+        <TranscriptDisplay lines={finalTranscript} interimTranscript={interimTranscript} />
+        <RecorderControls
+          isListening={isListening}
+          hasTranscript={!!transcript}
+          onStart={start}
+          onStop={stop}
+          onReset={reset}
+        />
       </div>
     </div>
   );

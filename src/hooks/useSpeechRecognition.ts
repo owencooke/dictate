@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+interface TranscriptLine {
+  text: string;
+  timestamp: string;
+}
+
 interface SpeechRecognitionResult {
   transcript: string;
   interimTranscript: string;
-  finalTranscript: string;
+  finalTranscript: TranscriptLine[];
   isListening: boolean;
   isSupported: boolean;
   start: () => void;
@@ -22,8 +27,8 @@ export const useSpeechRecognition = ({
   continuous = true,
   interimResults = true,
 }: UseSpeechRecognitionOptions = {}): SpeechRecognitionResult => {
-  // split state: finalized and interim pieces
-  const [finalTranscript, setFinalTranscript] = useState('');
+  // split state: finalized lines and interim pieces
+  const [finalTranscript, setFinalTranscript] = useState<TranscriptLine[]>([]);
   const [interimTranscript, setInterimTranscript] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
@@ -58,8 +63,8 @@ export const useSpeechRecognition = ({
       }
 
       if (finalText) {
-        // append a newline after each finalized segment to keep sentences separate
-        setFinalTranscript(prev => prev + finalText + '\n');
+        const timestamp = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        setFinalTranscript(prev => [...prev, { text: finalText.trim(), timestamp }]);
       }
       // always replace interim, never accumulate
       setInterimTranscript(interimText);
@@ -93,12 +98,12 @@ export const useSpeechRecognition = ({
 
   const reset = useCallback(() => {
     stop();
-    setFinalTranscript('');
+    setFinalTranscript([]);
     setInterimTranscript('');
   }, [stop]);
 
-  // expose combined transcript for convenience
-  const transcript = finalTranscript + interimTranscript;
+  // expose combined transcript for convenience (string form)
+  const transcript = finalTranscript.map(l => l.text).join('\n') + interimTranscript;
   return {
     transcript,
     finalTranscript,

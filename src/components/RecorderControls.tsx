@@ -17,30 +17,22 @@ export const RecorderControls: React.FC<RecorderControlsProps> = ({
   onReset,
 }) => (
   <div className="button-container">
-      <div className="recorder-controls">
-        <button
-          className={`btn mic-button ${isListening ? 'listening' : ''}`}
-          onClick={onStart}
-          disabled={isListening}
-          aria-label="Start recording"
-        >
-          <FiMic />
-        </button>
-        <button
-          className="btn stop-button"
-          onClick={onStop}
-          disabled={!isListening}
-          aria-label="Stop recording"
-        >
-          <FiSquare />
-        </button>
-        <button
-          className="btn reset-button"
-          onClick={onReset}
-          aria-label="Reset transcription"
-        >
-          <FiRefreshCw />
-        </button>
-      </div>
+    <div className="recorder-controls">
+      <button
+        className={`btn ${isListening ? 'stop-button listening' : 'mic-button'}`}
+        onClick={isListening ? onStop : onStart}
+        aria-label={isListening ? 'Stop recording' : 'Start recording'}
+      >
+        {isListening ? <FiSquare /> : <FiMic />}
+      </button>
+
+      <button
+        className="btn reset-button"
+        onClick={onReset}
+        aria-label="Reset transcription"
+      >
+        <FiRefreshCw />
+      </button>
+    </div>
   </div>
 );
